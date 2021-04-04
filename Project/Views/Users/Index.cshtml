@@ -1,0 +1,114 @@
+﻿@model UsersIndexViewModel
+
+@{ ViewData["Title"] = "Users"; }
+
+<h1>Users</h1>
+
+<p>
+    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register new user</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            @switch (Model.Filter)
+            {
+                case "firstName":
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstNameReversed">First Name &uarr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastName">Last Name &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="email">Email &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th> break;
+                case "lastName":
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstName">First Name &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastNameReversed">Last Name &uarr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="email">Email &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th> break;
+                case "email":
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstName">First Name &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastName">Last Name &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="emailReversed">Email &uarr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th> break;
+                case "username":
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstName">First Name &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastName">Last Name &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="email">Email &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="usernameReversed">Username &uarr;</a></th> break;
+                default:
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstName">First Name &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastName">Last Name &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="email">Email &darr;</a></th>
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th>                    break;
+            }
+            <th>Phone Number</th>
+            <th>Social Security Number</th>
+            <th>Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (UserIndexViewModel user in Model.Users)
+        {
+            <tr>
+        <td>@user.FirstName</td>
+        <td>@user.Surname</td>
+        <td>@user.Email</td>
+        <td>@user.Username</td>
+        <td>@user.PhoneNumber</td>
+        <td>@user.SSN</td>
+        <td>@user.Address</td>
+        @if (User.IsInRole("Admin"))
+        {
+            <td>
+                <a asp-action="Details" asp-route-id="@user.UserId">Details</a>
+                <a asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
+                <a asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
+                </td> }
+                else
+                {
+                <td>
+                <a asp-action="Details" asp-route-id="@user.UserId">Details</a>
+                </td>                }
+                </tr>}
+    </tbody>
+</table>
+
+<footer>
+    <div class="float-left">
+        <div class="pages">
+            @for (int i = 1; i <= Model.PagesCount; i++)
+            {
+                if (Model.PageNumber == i)
+                {
+                    <a class="disabled"><div class="page">@i</div></a> }
+                else
+                {
+                    <a asp-action="Index" asp-route-page="@i" asp-route-filter="@Model.Filter" asp-route-pageSize="@Model.PageSize"><div class="page">@i</div></a>                
+                }
+            }
+        </div>
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row">
+            Page @Model.PageNumber of @Model.PagesCount
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white mb-3 float-right">
+        <div class="container">
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row">
+                <span style="margin-right: 5%">Show: </span>
+                @switch (Model.PageSize)
+                {
+                    case 25:
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="10">10</a></div>
+                        <div class="page"><a class="disabled">25</a></div>
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="50">50</a></div> break;
+                    case 50:
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="10">10</a></div>
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="25">25</a></div>
+                        <div class="page"><a class="disabled">50</a></div> break;
+                    default:
+                        <div class="page"><a class="disabled">10</a></div>
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="25">25</a></div>
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="50">50</a></div>break;
+                }
+            </div>
+        </div>
+    </nav>
+</footer>

@@ -1,0 +1,89 @@
+﻿@model ReservationsIndexViewModel
+@{ ViewData["Title"] = "Index"; }
+
+<h1>Flight Reservations</h1>
+<a asp-action="Create">Book a flight</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            @if (Model.Filter == "email")
+            {
+<th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="emailReversed">Email &uarr;</a></th> }
+            else
+            {
+<th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="email">Email &darr;</a></th>}
+            <th>Phone Number</th>
+            <th>Departure City</th>
+            <th>Destination City</th>
+            <th>Departure Time</th>
+            <th>Ticket Type</th>
+            <th>Tickets Bought</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ReservationIndexViewModel reservation in Model.Reservations)
+        {
+<tr>
+    <td>@reservation.Name</td>
+    <td>@reservation.Email</td>
+    <td>@reservation.PhoneNumber</td>
+    <td>@reservation.DepartureCity</td>
+    <td>@reservation.DestinationCity</td>
+    <td>@reservation.DepartureTime</td>
+    <td>@reservation.TicketType</td>
+    <td>@reservation.TicketsCount</td>
+
+           
+     
+    <td>
+        <a asp-action="Delete" asp-route-id="@reservation.ReservationId">Delete</a>
+        <a asp-action="Details" asp-route-id="@reservation.ReservationId">Details</a>
+    </td>
+    
+    </tr>
+     }
+        }
+    </tbody>
+    </table>
+
+<footer>
+    <div class="float-left">
+        <div class="pages">
+            @for (int i = 1; i <= Model.PagesCount; i++)
+            {
+                if (Model.PageNumber == i)
+                {
+                    <a class="disabled"><div class="page">@i</div></a> }
+                else
+                {
+                    <a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="@Model.PageSize" asp-route-page="@i"><div class="page">@i</div></a>                }
+            }
+        </div>
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row">
+            Page @Model.PageNumber of @Model.PagesCount
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white mb-3 float-right">
+        <div class="container">
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row">
+                <span style="margin-right: 5%">Show: </span>
+                @switch (Model.PageSize)
+                {
+                    case 25:
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="10"> 10 </a></div>
+                        <div class="page"><a class="disabled"> 25 </a></div>
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="50"> 50 </a></div> break;
+                    case 50:
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="10"> 10 </a></div>
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="25"> 25 </a></div>
+                        <div class="page"><a class="disabled"> 50 </a></div> break;
+                    default:
+                        <div class="page"><a class="disabled"> 10 </a></div>
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="25"> 25 </a></div>
+                        <div class="page"><a asp-action="Index" asp-route-filter="@Model.Filter" asp-route-pageSize="50"> 50 </a></div>break;
+                }
+            </div>
+        </div>
+    </nav>
+</footer>

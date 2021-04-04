@@ -1,0 +1,99 @@
+﻿@model FlightManager.Data.Models.ReservationCreateViewModel
+
+
+@{ ViewData["Title"] = "Create"; }
+
+<h1>Create Reservation</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @if (!String.IsNullOrEmpty(Model.ErrorMessage))
+        {
+<p class="alert-danger">@Model.ErrorMessage</p>}
+    <form asp-action="Create">
+        <div class="form-group">
+            <label asp-for="FlightId">Select the flight you want to book</label>
+            <select asp-for="FlightId">
+               
+                
+                    @foreach (ReservationFlightCreateViewModel flight in Model.Flights)
+                    {
+
+                        <option value="@flight.FlightID">from @flight.DepartureCity to @flight.DestinationCity on @flight.DepartureTime with @flight.TicketsLeft Regular tickets left and @flight.BusinessTicketsLeft Business tickets left</option>
+                     }
+
+                
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="FirstName" class="control-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SecondName" class="control-label"></label>
+            <input asp-for="SecondName" class="form-control" />
+            <span asp-validation-for="SecondName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="LastName" class="control-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Email" class="control-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="SSN" class="control-label"></label>
+            <input asp-for="SSN" class="form-control" />
+            <span asp-validation-for="SSN" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PhoneNumber" class="control-label"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Nationality" class="control-label"></label>
+            <input asp-for="Nationality" class="form-control" />
+            <span asp-validation-for="Nationality" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="TicketType" class="control-label"></label>
+            @*@if (Model.Flights.Where(m => m.FlightID == Model.FlightId).FirstOrDefault().TicketsLeft == 0)
+            {
+               <select asp-for="TicketType">
+                <option value="Business">Business</option>
+                   </select>
+            <p>There are no Regular Class type tickets left for this flight.</p>
+            }
+            else if(Model.Flights.Where(m => m.FlightID == Model.FlightId).FirstOrDefault().BusinessTicketsLeft == 0)
+            { 
+                 <select asp-for="TicketType">
+                <option value="Regular">Regular</option>
+                   </select>
+                    <p>There are no Business Class type tickets left for this flight.</p>
+            }
+            else
+            {*@
+            <select asp-for="TicketType">
+                <option value="Business">Business</option>
+                <option value="Regular">Regular</option>
+            </select> }
+            <span asp-validation-for="TicketType" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
