@@ -8,27 +8,36 @@ namespace FlightManager.Data.Models
 {
     public class Flight : BaseEntity
     {
+        [Required]
         [Display(Name ="Leaving From")]
         public string LeavingFrom { get; set; }
+        [Required]
         [Display(Name = "Going To")]
         public string GoingTo { get; set; }
 
         [Display(Name = "Plane Type")]
         public string AirplaneType { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than {0}")]
         [Display(Name = "Plane Capicity")]
         public int PassengersCapacity { get; set; }
         [Display(Name = "Tickets Left")]
         public int TicketsLeft { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than {0}")]
         [Display(Name = "Business Class Capacity")]
         public int BusinessClassCapacity { get; set; }
 
         [Display(Name = "Business Tickets Left")]
         public int BusinessTicketsLeft { get; set; }
+
         [Display(Name = "Plane Id")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than 0")]
         public int PlaneId { get; set; }
 
         [Display(Name = "Departure Time")]
         public DateTime Departure { get; set; }
+
         [Display(Name = "Time of Arrival")]
         public DateTime Arrival { get; set; }
         [Display(Name = "Pilot Name")]

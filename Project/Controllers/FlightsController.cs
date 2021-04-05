@@ -58,14 +58,67 @@ namespace FlightManager.Controllers
             return View(model);
         }
 
-       
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, int? page, int pageSize = 10)
         {
-            flightService.DeleteFlight(flightService.GetFlightById(id));
+            int pageNumber = (page ?? 1);
+            Flight flight = flightService.GetFlightById(id);
+            FlightDetailsViewModel model = new FlightDetailsViewModel()
+            {
+                FlightId = flight.Id,
+                BusinessClassCapacity = flight.BusinessClassCapacity,
+                PilotName = flight.PilotName,
+                DepartureCity = flight.LeavingFrom,
+                DepartureTime = flight.Departure,
+                DestinationCity = flight.GoingTo,
+                FlightDuration = flight.Arrival.Subtract(flight.Departure),
+                PlaneCapacity = flight.PassengersCapacity,
+                PlaneType = flight.AirplaneType,
+                BusinessTicketsLeft = flight.BusinessTicketsLeft,
+                TicketsLeft = flight.TicketsLeft,
+                Reservations = reservationService.GetAllReservationsForFlight(flight).Select(r => new FlightReservationViewModel()
+                {
+                    Email = r.Email,
+                    Name = r.FirstName + " " + r.MiddleName + " " + r.Surname,
+                    Nationality = r.Nationality,
+                    PhoneNumber = r.PhoneNumber,
+                    SSN = r.SSN,
+                    TicketType = r.TicketType,
+                    TicketsCount = r.TicketsCount
+                }).ToList(),
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                PagesCount = (int)Math.Ceiling(reservationService.GetAllReservationsForFlight(flight).Count / (double)pageSize)
+            };
+
+            model.Reservations = model.Reservations.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+
+            return View(model);
+        }
+
+
+        [HttpPost]
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            Flight flightToDelete = flightService.GetFlightById(id);
+            List<FlightBooking> Reservations = reservationService.GetAllReservationsForFlight(flightToDelete);
+
+            if (Reservations.Count!=0)
+            {
+                foreach (var reservation in Reservations)
+                {
+                    reservationService.DeleteReservation(reservation.Id);
+                }
+            }
+            flightService.DeleteFlight(flightToDelete);
 
             return RedirectToAction("Index");
         }
 
+        
+      
+       
         public IActionResult Details(int id, int? page, int pageSize = 10)
         {
             int pageNumber = (page ?? 1);
@@ -109,13 +162,15 @@ namespace FlightManager.Controllers
             return View();
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         [Authorize]
         public IActionResult Create(Flight model)
         {
             if (model.Arrival < model.Departure)
             {
-                return RedirectToAction("Create");
+                ModelState.AddModelError("Departure Time", "Departure time should be a date/time before Arrival time.");
+                return View(model);
             }
             flightService.CreateFlight(model);
             return RedirectToAction("Index");

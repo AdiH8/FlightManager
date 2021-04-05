@@ -21,7 +21,7 @@ namespace FlightManager.Controllers
 
         // GET: Users
         [Authorize]
-        public IActionResult Index(int? page, string filter, int pageSize = 10)
+        public IActionResult Index(int? page, string searchString, string filter, int pageSize = 10)
         {
             int pageNumber = (page ?? 1);
             UsersIndexViewModel model = new UsersIndexViewModel()
@@ -42,7 +42,11 @@ namespace FlightManager.Controllers
                 PageSize = pageSize,
                 PagesCount = (int)(Math.Ceiling(_context.Users.Count() / (double)pageSize))
             };
-
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                model.Users = model.Users.Where(f => f.FirstName.Contains(searchString) || f.Surname.Contains(searchString) || 
+                f.Email.Contains(searchString) || f.Address.Contains(searchString) || f.Username.Contains(searchString)).ToList();
+            }
             switch (filter)
             {
                 case "email":

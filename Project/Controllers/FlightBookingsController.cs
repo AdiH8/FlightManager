@@ -12,7 +12,6 @@ namespace FlightManager.Controllers
     {
         private readonly IReservationService reservationService;
         private readonly IFlightsService flightService;
-        private readonly ApplicationDbContext _context;
 
         public FlightBookingsController(IReservationService reservationService, IFlightsService flightService)
         {
@@ -69,13 +68,15 @@ namespace FlightManager.Controllers
             Flight flight = flightService.GetFlightById(model.FlightId);
             if (model.TicketType == "Business" && flight.BusinessTicketsLeft == 0)
             {
-                model.ErrorMessage = "Not enough Business class tickets!";
-                return View("Create", model);
+                // model.ErrorMessage = "Not enough Business class tickets!";
+
+                return View("FullPlaneView");
             }
-            else if (model.TicketType == "Regular" && flight.TicketsLeft ==0 )
+            else if (model.TicketType == "Regular" && flight.TicketsLeft == 0)
             {
-                model.ErrorMessage = "Not enough Regular class tickets!";
-                return View("Create", model);
+
+                // model.ErrorMessage = "Not enough Regular class tickets!";
+                return View("FullPlaneView");
             }
 
             ReservationCreateViewModel resModel = new ReservationCreateViewModel()
@@ -144,7 +145,7 @@ namespace FlightManager.Controllers
                 PhoneNumber = model.PhoneNumber,
                 Nationality = model.Nationality,
                 TicketType = model.TicketType,
-                TicketCount = model.TicketCount,
+                TicketCount = 1,
                 BusinessTicketsLeft = flight.BusinessTicketsLeft,
                 FlightId = flight.Id,
                 TicketsLeft = flight.TicketsLeft
@@ -199,8 +200,7 @@ namespace FlightManager.Controllers
                 return NotFound();
             }
 
-            var reservation = _context.FlightBookings
-                .FirstOrDefault(m => m.Id == id);
+            var reservation = reservationService.GetReservationById(id);
 
             if (reservation.IsConfirmed)
             {
@@ -219,9 +219,7 @@ namespace FlightManager.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var reservation =  _context.FlightBookings.Find(id);
-            _context.FlightBookings.Remove(reservation);
-             _context.SaveChangesAsync();
+            reservationService.DeleteReservation(id);
             return RedirectToAction(nameof(Index));
         }
     }

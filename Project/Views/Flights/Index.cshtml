@@ -7,15 +7,13 @@
 <a asp-action="Create">Create New Flight</a>
  }
 <br>
-@using (Html.BeginForm("Index", "Flight", FormMethod.Get))
+@using (Html.BeginForm())
 {
 <label>Search city: </label>
                 @Html.TextBox("SearchString");
 <input type="submit" value="Search" />
+<a asp-action="Index">Resume</a>
 }
-
-
-
 
 <table class="table">
     <tr>
@@ -82,18 +80,18 @@ else
                 @switch (Model.PageSize)
                 {
                     case 25:
-    <div class="page"><a asp-action="Index" asp-route-pageSize="10">10</a></div>
-                        <div class="page"><a class="disabled">25</a></div>
-                                            <div class="page"><a asp-action="Index" asp-route-pageSize="50">50</a></div> break;
-                                        case 50:
                         <div class="page"><a asp-action="Index" asp-route-pageSize="10">10</a></div>
-                                            <div class="page"><a asp-action="Index" asp-route-pageSize="25">25</a></div>
-                                                                <div class="page"><a class="disabled">50</a></div> break;
-                                                            default:
-                                            <div class="page"><a class="disabled">10</a></div>
-                                                                <div class="page"><a asp-action="Index" asp-route-pageSize="25">25</a></div>
-                                                                                    <div class="page"><a asp-action="Index" asp-route-pageSize="50">50</a></div>break;
-                                                                            }
+                        <div class="page"><a class="disabled">25</a></div>
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="50">50</a></div> break;
+                    case 50:
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="10">10</a></div>
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="25">25</a></div>
+                        <div class="page"><a class="disabled">50</a></div> break;
+                    default:
+                        <div class="page"><a class="disabled">10</a></div>
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="25">25</a></div>
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="50">50</a></div>break;
+                }
             </div>
         </div>
     </nav>

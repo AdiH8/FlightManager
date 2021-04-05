@@ -98,6 +98,16 @@ namespace FlightManager.Services
             if (reservation.IsConfirmed) { 
                 return reservation;
             }
+            Flight dbFlight = dBContext.Flights.Where(f => f.Id.ToString() == reservation.FlightId.ToString()).First();
+            if (reservation.TicketType == "Business")
+            {
+                dbFlight.BusinessTicketsLeft += 1;
+            }
+            else
+            {
+                dbFlight.TicketsLeft +=1;
+            }
+
 
             dBContext.FlightBookings.Remove(reservation);
             dBContext.SaveChanges();

@@ -4,10 +4,18 @@
 
 <h1>Users</h1>
 
-<p>
-    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register new user</a>
-</p>
 
+<a asp-area="Identity" asp-page="/Account/Register">Register new user</a>
+
+
+<div>@using (Html.BeginForm())
+{
+<label>Search : </label>
+                @Html.TextBox("SearchString");
+<input type="submit" value="Search" />
+    <a asp-action="Index">Resume</a>}
+
+    </div>
 <table class="table">
     <thead>
         <tr>
@@ -17,27 +25,32 @@
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstNameReversed">First Name &uarr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastName">Last Name &darr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="email">Email &darr;</a></th>
-                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th> break;
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th>
+                    break;
                 case "lastName":
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstName">First Name &darr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastNameReversed">Last Name &uarr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="email">Email &darr;</a></th>
-                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th> break;
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th>
+                    break;
                 case "email":
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstName">First Name &darr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastName">Last Name &darr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="emailReversed">Email &uarr;</a></th>
-                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th> break;
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th>
+                    break;
                 case "username":
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstName">First Name &darr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastName">Last Name &darr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="email">Email &darr;</a></th>
-                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="usernameReversed">Username &uarr;</a></th> break;
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="usernameReversed">Username &uarr;</a></th>
+                    break;
                 default:
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="firstName">First Name &darr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="lastName">Last Name &darr;</a></th>
                     <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="email">Email &darr;</a></th>
-                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th>                    break;
+                    <th><a asp-action="Index" asp-route-pageSize="@Model.PageSize" asp-route-filter="username">Username &darr;</a></th>
+                    break;
             }
             <th>Phone Number</th>
             <th>Social Security Number</th>
@@ -48,26 +61,30 @@
         @foreach (UserIndexViewModel user in Model.Users)
         {
             <tr>
-        <td>@user.FirstName</td>
-        <td>@user.Surname</td>
-        <td>@user.Email</td>
-        <td>@user.Username</td>
-        <td>@user.PhoneNumber</td>
-        <td>@user.SSN</td>
-        <td>@user.Address</td>
-        @if (User.IsInRole("Admin"))
-        {
-            <td>
-                <a asp-action="Details" asp-route-id="@user.UserId">Details</a>
-                <a asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
-                <a asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
-                </td> }
+                <td>@user.FirstName</td>
+                <td>@user.Surname</td>
+                <td>@user.Email</td>
+                <td>@user.Username</td>
+                <td>@user.PhoneNumber</td>
+                <td>@user.SSN</td>
+                <td>@user.Address</td>
+                
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@user.UserId">Details</a>
+                        <a asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
+                    </td>
+                    }
                 else
                 {
-                <td>
-                <a asp-action="Details" asp-route-id="@user.UserId">Details</a>
-                </td>                }
-                </tr>}
+                    <td>
+                        <a asp-action="Details" asp-route-id="@user.UserId">Details</a>
+                    </td>
+                    }
+            </tr>
+            }
     </tbody>
 </table>
 
@@ -82,7 +99,7 @@
                 else
                 {
                     <a asp-action="Index" asp-route-page="@i" asp-route-filter="@Model.Filter" asp-route-pageSize="@Model.PageSize"><div class="page">@i</div></a>                
-                }
+                    }
             }
         </div>
         <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row">
