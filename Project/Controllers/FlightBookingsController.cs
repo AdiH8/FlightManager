@@ -35,7 +35,8 @@ namespace FlightManager.Controllers
                     DestinationCity = flightService.GetFlightById(r.FlightId).GoingTo,
                     PhoneNumber = r.PhoneNumber,
                     TicketType = r.TicketType,
-                    TicketsCount = r.TicketsCount
+                    TicketsCount = r.TicketsCount,
+                    ConfirmedReservation=r.IsConfirmed
                 }).ToList(),
                 Filter = filter,
                 PageNumber = pageNumber,

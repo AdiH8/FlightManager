@@ -14,16 +14,21 @@ namespace FlightManager.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _context;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         public string Username { get; set; }
+        [Display(Name = "Social Security Number")]
+        public string SSN { get; set; }
+        public string Role { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -36,18 +41,47 @@ namespace FlightManager.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "First name")]
+            public string FirstName { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Surname")]
+            public string Surname { get; set; }
+
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Address")]
+            public string Address { get; set; }
+
+            [EmailAddress]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
         {
+           // var id = _context.Users.Find(user);
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var firstName = user.FirstName;
+            var surname = user.Surname;
+            var ssn = user.SSN;
+            var email = user.Email;
+            var address = user.Address;
+            var role = _userManager.GetRolesAsync(user).Result.FirstOrDefault();
 
             Username = userName;
-
+            SSN = ssn;
+            Role = role;
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FirstName = firstName,
+                Surname = surname,
+                Email = email,
+                Address = address
             };
         }
 

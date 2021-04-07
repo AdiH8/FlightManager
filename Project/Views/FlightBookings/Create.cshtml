@@ -64,26 +64,10 @@
 
         <div class="form-group">
             <label asp-for="TicketType" class="control-label"></label>
-            @*@if (Model.Flights.Where(m => m.FlightID == Model.FlightId).FirstOrDefault().TicketsLeft == 0)
-            {
-               <select asp-for="TicketType">
-                <option value="Business">Business</option>
-                   </select>
-            <p>There are no Regular Class type tickets left for this flight.</p>
-            }
-            else if(Model.Flights.Where(m => m.FlightID == Model.FlightId).FirstOrDefault().BusinessTicketsLeft == 0)
-            { 
-                 <select asp-for="TicketType">
-                <option value="Regular">Regular</option>
-                   </select>
-                    <p>There are no Business Class type tickets left for this flight.</p>
-            }
-            else
-            {*@
             <select asp-for="TicketType">
                 <option value="Business">Business</option>
                 <option value="Regular">Regular</option>
-            </select> }
+            </select> 
             <span asp-validation-for="TicketType" class="text-danger"></span>
         </div>
         <div class="form-group">

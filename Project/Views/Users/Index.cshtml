@@ -55,6 +55,7 @@
             <th>Phone Number</th>
             <th>Social Security Number</th>
             <th>Address</th>
+            <th>Role</th>
         </tr>
     </thead>
     <tbody>
@@ -68,6 +69,7 @@
                 <td>@user.PhoneNumber</td>
                 <td>@user.SSN</td>
                 <td>@user.Address</td>
+                <td>@user.Role</td>
                 
                 @if (User.IsInRole("Admin"))
                 {

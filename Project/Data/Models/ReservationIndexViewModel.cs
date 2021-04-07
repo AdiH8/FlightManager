@@ -13,5 +13,6 @@ namespace FlightManager.Data.Models
         public string DepartureCity { get; set; }
         public DateTime DepartureTime { get; set; }
         public int TicketsCount { get; set; }
+        public bool ConfirmedReservation { get; set; }
     }
 }

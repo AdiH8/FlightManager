@@ -14,9 +14,12 @@ namespace FlightManager.Controllers
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public UsersController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+       
+        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Users
@@ -35,7 +38,8 @@ namespace FlightManager.Controllers
                     Email = u.Email,
                     PhoneNumber = u.PhoneNumber,
                     SSN = u.SSN,
-                    Username = u.UserName
+                    Username = u.UserName,
+                    Role = _userManager.GetRolesAsync(u).Result.FirstOrDefault().ToString()
                 }).ToList(),
                 Filter = filter,
                 PageNumber = pageNumber,

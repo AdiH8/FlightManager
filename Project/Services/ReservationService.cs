@@ -73,10 +73,10 @@ namespace FlightManager.Services
             dBContext.SaveChanges();
 
             string msg = $@"Confirmation for flight from {dbFlight.LeavingFrom} to {dbFlight.GoingTo} <br />
-                            <a href={"https://localhost:44378"}/Reservation/Confirm?id={reservation.Id}>Confirm</a> <br />
-                            <a href={"https://localhost:44378"}/Reservation/Delete?id={reservation.Id}>Delete</a>";
+                            <a href={"https://localhost:44378"}/FlightBookings/Confirm?id={reservation.Id}>Confirm</a> <br />
+                            <a href={"https://localhost:44378"}/FlightBookings/Delete?id={reservation.Id}>Delete</a>";
 
-           // emailSender.SendEmailAsync(reservation.Email, "Reservation Confirmation", msg).GetAwaiter().GetResult();
+            emailSender.SendEmailAsync(reservation.Email, "Reservation Confirmation", msg).GetAwaiter().GetResult();
 
             return reservation;
         }
@@ -95,8 +95,15 @@ namespace FlightManager.Services
         {
             FlightBooking reservation = dBContext.FlightBookings.Where(r => r.Id == id).First();
             
-            if (reservation.IsConfirmed) { 
-                return reservation;
+            if (reservation.IsConfirmed) {
+                string msg = $@"We are sorry to inform you that there have been some issues 
+                 with flight No. {reservation.Flight.Id} - {reservation.Flight.LeavingFrom} 
+                 to {reservation.Flight.GoingTo}, so your reservation has been canceled. <br>
+                 Please reach out to our service to choose another flight to book instead of this one  
+                 or to have your money returned. <br> <br>
+                 Thank you for using our services! <br> <br> Cloud Express";
+
+                emailSender.SendEmailAsync(reservation.Email, "Canceled Reservation", msg).GetAwaiter().GetResult();
             }
             Flight dbFlight = dBContext.Flights.Where(f => f.Id.ToString() == reservation.FlightId.ToString()).First();
             if (reservation.TicketType == "Business")

@@ -12,7 +12,8 @@
 
 @if (User.IsInRole("Admin"))
 {
-<a asp-action="Edit" asp-route-id="@Model.FlightId">Edit</a>}
+<a asp-action="Edit" asp-route-id="@Model.FlightId">Edit</a>
+<a asp-action="Delete" asp-route-id="@Model.FlightId">Delete</a>}
 
 @if (Model.Reservations.Count > 0)
 {
