@@ -72,7 +72,7 @@ namespace FlightManager.Services
             dBContext.FlightBookings.Add(reservation);
             dBContext.SaveChanges();
 
-            string msg = $@"Confirmation for flight from {dbFlight.LeavingFrom} to {dbFlight.GoingTo} <br />
+            string msg = $@"Please confirm your reservation for flight {dbFlight.Id} from {dbFlight.LeavingFrom} to {dbFlight.GoingTo} on {dbFlight.Departure}.<br />
                             <a href={"https://localhost:44378"}/FlightBookings/Confirm?id={reservation.Id}>Confirm</a> <br />
                             <a href={"https://localhost:44378"}/FlightBookings/Delete?id={reservation.Id}>Delete</a>";
 

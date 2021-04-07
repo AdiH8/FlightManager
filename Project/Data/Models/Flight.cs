@@ -18,13 +18,13 @@ namespace FlightManager.Data.Models
         [Display(Name = "Plane Type")]
         public string AirplaneType { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than 0")]
+        [Range(1, int.MaxValue, ErrorMessage = "Plane Capacity cannot be negative or 0.")]
         [Display(Name = "Plane Capicity")]
         public int PassengersCapacity { get; set; }
         [Display(Name = "Tickets Left")]
         public int TicketsLeft { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than 0")]
+        [Range(1, int.MaxValue, ErrorMessage = "The Business Class Capacity cannot be negative or 0.")]
         [Display(Name = "Business Class Capacity")]
         public int BusinessClassCapacity { get; set; }
 
@@ -32,7 +32,7 @@ namespace FlightManager.Data.Models
         public int BusinessTicketsLeft { get; set; }
 
         [Display(Name = "Plane Id")]
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter a value bigger than 0")]
+        [Range(1, int.MaxValue, ErrorMessage = "The Plane ID cannot be negative.")]
         public int PlaneId { get; set; }
 
         [Display(Name = "Departure Time")]
