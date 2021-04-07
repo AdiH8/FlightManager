@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FlightManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210402143139_database")]
-    partial class database
+    [Migration("20210407165933_addedFlightID")]
+    partial class addedFlightID
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -122,9 +122,11 @@ namespace FlightManager.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("GoingTo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LeavingFrom")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PassengersCapacity")
@@ -157,7 +159,7 @@ namespace FlightManager.Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FlightId")
+                    b.Property<int>("FlightID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsConfirmed")
@@ -186,47 +188,9 @@ namespace FlightManager.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlightId");
+                    b.HasIndex("FlightID");
 
                     b.ToTable("FlightBookings");
-                });
-
-            modelBuilder.Entity("FlightManager.Data.Models.Passenger", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("FlightId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nationality")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SSN")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FlightId");
-
-                    b.ToTable("Passenger");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -364,14 +328,9 @@ namespace FlightManager.Data.Migrations
                 {
                     b.HasOne("FlightManager.Data.Models.Flight", "Flight")
                         .WithMany()
-                        .HasForeignKey("FlightId");
-                });
-
-            modelBuilder.Entity("FlightManager.Data.Models.Passenger", b =>
-                {
-                    b.HasOne("FlightManager.Data.Models.Flight", null)
-                        .WithMany("Passengers")
-                        .HasForeignKey("FlightId");
+                        .HasForeignKey("FlightID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

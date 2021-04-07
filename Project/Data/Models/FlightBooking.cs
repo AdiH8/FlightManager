@@ -27,7 +27,8 @@ namespace FlightManager.Data.Models
         public Flight Flight  { get; set; }
 
         [Display(Name = "Flight ID")]
-        public int FlightId  { get; set; }
+        
+        public int FlightID  { get; set; }
         [Display(Name = "Ticket Type")]
         public string TicketType { get; set; }
         [Display(Name = "Confirmed Reservation")]

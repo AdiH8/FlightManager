@@ -35,7 +35,7 @@ namespace FlightManager.Services
 
         public List<FlightBooking> GetAllReservationsForFlight(Flight flight)
         {
-            return dBContext.FlightBookings.Where(r => r.FlightId == flight.Id).ToList();
+            return dBContext.FlightBookings.Where(r => r.Flight.Id == flight.Id).ToList();
         }
 
         public FlightBooking CreateReservation(ReservationCreateViewModel model)
@@ -43,7 +43,6 @@ namespace FlightManager.Services
             
             FlightBooking reservation = new FlightBooking()
             {
-                
                 TicketType = model.TicketType,
                 Flight = dBContext.Flights.Where(f => f.Id == model.FlightId).First(),
                 IsConfirmed = false,
@@ -55,7 +54,7 @@ namespace FlightManager.Services
                 SSN = model.SSN,
                 PhoneNumber = model.PhoneNumber,
                 Nationality = model.Nationality,
-                FlightId = model.FlightId
+                FlightID = model.FlightId
 
             };
 
@@ -72,8 +71,10 @@ namespace FlightManager.Services
             dBContext.FlightBookings.Add(reservation);
             dBContext.SaveChanges();
 
-            string msg = $@"Please confirm your reservation for flight {dbFlight.Id} from {dbFlight.LeavingFrom} to {dbFlight.GoingTo} on {dbFlight.Departure}.<br />
-                            <a href={"https://localhost:44378"}/FlightBookings/Confirm?id={reservation.Id}>Confirm</a> <br />
+            string msg = $@"Thank you for using our services! <br> You have successfuly made a reservation 
+            for flight {dbFlight.Id} from {dbFlight.LeavingFrom} to {dbFlight.GoingTo} leaving on {dbFlight.Departure}.
+                            Now it's only left for you to confirm it. <br />
+                            <a href={"https://localhost:44378"}/FlightBookings/Confirm?id={reservation.Id}>Confirm Reservation</a> <br />
                             <a href={"https://localhost:44378"}/FlightBookings/Delete?id={reservation.Id}>Delete</a>";
 
             emailSender.SendEmailAsync(reservation.Email, "Reservation Confirmation", msg).GetAwaiter().GetResult();
@@ -98,14 +99,14 @@ namespace FlightManager.Services
             if (reservation.IsConfirmed) {
                 string msg = $@"We are sorry to inform you that there have been some issues 
                  with flight No. {reservation.Flight.Id} - {reservation.Flight.LeavingFrom} 
-                 to {reservation.Flight.GoingTo}, so your reservation has been canceled. <br>
-                 Please reach out to our service to choose another flight to book instead of this one  
+                 to {reservation.Flight.GoingTo}, which led to its cancelation and the termination of your reservation. <br>
+                 Please contact us to choose another flight to book 
                  or to have your money returned. <br> <br>
                  Thank you for using our services! <br> <br> Cloud Express";
 
                 emailSender.SendEmailAsync(reservation.Email, "Canceled Reservation", msg).GetAwaiter().GetResult();
             }
-            Flight dbFlight = dBContext.Flights.Where(f => f.Id.ToString() == reservation.FlightId.ToString()).First();
+            Flight dbFlight = dBContext.Flights.Where(f => f.Id.ToString() == reservation.Flight.Id.ToString()).First();
             if (reservation.TicketType == "Business")
             {
                 dbFlight.BusinessTicketsLeft += 1;
@@ -125,7 +126,7 @@ namespace FlightManager.Services
         public FlightBooking GetReservationById(int id)
         {
             FlightBooking reservation = dBContext.FlightBookings.Where(r => r.Id == id).First();
-            reservation.Flight = dBContext.Flights.Where(f => f.Id == reservation.FlightId).First();
+            reservation.Flight = dBContext.Flights.Where(f => f.Id == reservation.FlightID).First();
             return reservation;
         }
     }

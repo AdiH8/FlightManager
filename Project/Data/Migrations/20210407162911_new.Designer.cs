@@ -4,14 +4,16 @@ using FlightManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FlightManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210407162911_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,7 +159,7 @@ namespace FlightManager.Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FlightID")
+                    b.Property<int?>("FlightId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsConfirmed")
@@ -186,7 +188,7 @@ namespace FlightManager.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FlightID");
+                    b.HasIndex("FlightId");
 
                     b.ToTable("FlightBookings");
                 });
@@ -326,9 +328,7 @@ namespace FlightManager.Data.Migrations
                 {
                     b.HasOne("FlightManager.Data.Models.Flight", "Flight")
                         .WithMany()
-                        .HasForeignKey("FlightID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FlightId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

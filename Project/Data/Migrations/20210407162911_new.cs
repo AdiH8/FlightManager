@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FlightManager.Data.Migrations
 {
-    public partial class database : Migration
+    public partial class @new : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,8 +13,8 @@ namespace FlightManager.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    LeavingFrom = table.Column<string>(nullable: true),
-                    GoingTo = table.Column<string>(nullable: true),
+                    LeavingFrom = table.Column<string>(nullable: false),
+                    GoingTo = table.Column<string>(nullable: false),
                     AirplaneType = table.Column<string>(nullable: true),
                     PassengersCapacity = table.Column<int>(nullable: false),
                     TicketsLeft = table.Column<int>(nullable: false),
@@ -58,7 +58,6 @@ namespace FlightManager.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
 
             migrationBuilder.CreateIndex(
                 name: "IX_FlightBookings_FlightId",
