@@ -63,7 +63,7 @@ namespace FlightManager.Areas.Identity.Pages.Account
             [Display(Name = "Surname")]
             public string Surname { get; set; }
 
-
+            [Required]
             [DataType(DataType.Text)]
             [Display(Name = "Address")]
             public string Address { get; set; }

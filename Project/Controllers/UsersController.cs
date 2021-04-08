@@ -103,57 +103,48 @@ namespace FlightManager.Controllers
             return View(user);
         }
 
-        // GET: Users/Edit/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(string id)
+        public IActionResult Edit(string id)
         {
-            if (id == null)
+            ApplicationUser user = _context.Users.Where(u => u.Id == id).First();
+            var role = _userManager.GetRolesAsync(user).Result.First();
+            UserEditViewModel model = new UserEditViewModel()
             {
-                return NotFound();
-            }
-
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user);
+                FirstName = user.FirstName,
+                Surname = user.Surname,
+                Address = user.Address,
+                UserName = user.UserName,
+                PhoneNumber = user.PhoneNumber,
+                Role = role,
+                Email = user.Email
+            };
+            return View(model);
         }
 
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // problem s mnogo context, trqbva da se izpolzva await i async ??
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("FirstName,LastName,SSN,Address,Phone,Role,Id,UserName,PhoneNumber")] ApplicationUser user)
+        public IActionResult Edit(string id, UserEditViewModel model)
         {
-            if (id != user.Id)
-            {
-                return NotFound();
-            }
+            ApplicationUser user  = _context.Users.Where(u => u.Id == id).First();
+            string oldRole = _userManager.GetRolesAsync(user).Result.First().ToString();
+            _userManager.RemoveFromRoleAsync(user, oldRole); 
+            _context.Entry(user).State = EntityState.Modified;
+            _context.SaveChanges();
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
+            user.FirstName = model.FirstName;
+            user.Surname = model.Surname;
+            user.Address = model.Address;
+            user.UserName = model.UserName;
+            user.PhoneNumber = model.PhoneNumber;
+            user.Email = model.Email;
+            _context.Users.Update(user);
+            _context.SaveChanges();
+
+            _userManager.AddToRoleAsync(user, model.Role);
+            _context.Entry(user).State = EntityState.Modified;
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // GET: Users/Delete/5
@@ -183,6 +174,18 @@ namespace FlightManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _context.Users.FindAsync(id);
+            int adminsCount = 0;
+            foreach (var item in _context.Users.ToList())
+            {
+                if (_userManager.IsInRoleAsync(item, "Admin").Result)
+                {
+                    adminsCount += 1;
+                }
+            }
+            if ((adminsCount==1) && (_userManager.IsInRoleAsync(user, "Admin").Result))
+            {
+                return View("CannotDelete");
+            }
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

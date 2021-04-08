@@ -61,31 +61,31 @@
     <tbody>
         @foreach (UserIndexViewModel user in Model.Users)
         {
-            <tr>
-                <td>@user.FirstName</td>
-                <td>@user.Surname</td>
-                <td>@user.Email</td>
-                <td>@user.Username</td>
-                <td>@user.PhoneNumber</td>
-                <td>@user.SSN</td>
-                <td>@user.Address</td>
-                <td>@user.Role</td>
-                
-                @if (User.IsInRole("Admin"))
-                {
-                    <td>
-                        <a asp-action="Details" asp-route-id="@user.UserId">Details</a>
-                        <a asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
-                        <a asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
-                    </td>
-                    }
-                else
-                {
-                    <td>
-                        <a asp-action="Details" asp-route-id="@user.UserId">Details</a>
-                    </td>
-                    }
-            </tr>
+        <tr>
+            <td>@user.FirstName</td>
+            <td>@user.Surname</td>
+            <td>@user.Email</td>
+            <td>@user.Username</td>
+            <td>@user.PhoneNumber</td>
+            <td>@user.SSN</td>
+            <td>@user.Address</td>
+            <td>@user.Role</td>
+            <td>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Action
+            </button>
+            <div class="dropdown-menu shadow animated--grow-in">
+                <form class="d-inline">
+                    <a class="dropdown-item" asp-action="Details" asp-route-id="@user.UserId"><i class="fas fa-wrench"></i> Details</a>
+                    <a style='margin-right:16px' asp-action="Edit" asp-route-id="@user.UserId" class="dropdown-item"> <i class="fas fa-wrench"></i> Edit </a>
+                    <a style='margin-right:16px' asp-action="Delete" asp-route-id="@user.UserId" class="dropdown-item"> <i class="fas fa-wrench"></i> Delete </a>
+
+                </form>
+        </div>
+            </td>
+
+
+        </tr>
             }
     </tbody>
 </table>

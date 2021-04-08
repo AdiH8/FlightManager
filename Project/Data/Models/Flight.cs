@@ -15,6 +15,7 @@ namespace FlightManager.Data.Models
         [Display(Name = "Going To")]
         public string GoingTo { get; set; }
 
+        [Required]
         [Display(Name = "Plane Type")]
         public string AirplaneType { get; set; }
 
@@ -40,6 +41,8 @@ namespace FlightManager.Data.Models
 
         [Display(Name = "Time of Arrival")]
         public DateTime Arrival { get; set; }
+
+        [Required]
         [Display(Name = "Pilot Name")]
         public string PilotName { get; set; }
     }
