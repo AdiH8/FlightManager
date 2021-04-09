@@ -42,25 +42,29 @@
     <td class="text-right">
         <div class="btn-group">
             <a class="dropdown-item" asp-controller="FlightBookings" asp-route-id="@flight.FlightId" asp-action="Book"><i class="fas fa-trash-alt"></i>Book</a>
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Action
-            </button>
-            <div class="dropdown-menu shadow animated--grow-in">
-                <form class="d-inline">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Action
+                </button>
+                                    <div class="dropdown-menu shadow animated--grow-in">
+                                        <form class="d-inline">
 
-                    <a class="dropdown-item" asp-route-id="@flight.FlightId" asp-action="Details"><i class="fas fa-trash-alt"></i>Details</a>
-                </form>
-                @if (User.IsInRole("Admin"))
-                {
-        <a style='margin-right:16px' asp-action="Edit" asp-route-roleId="@flight.FlightId" class="dropdown-item"> <i class="fas fa-wrench"></i> Edit </a>
-                            <a style='margin-right:16px' asp-action="Delete" asp-route-roleId="@flight.FlightId" class="dropdown-item"> <i class="fas fa-wrench"></i> Delete </a>}
-            </div>
+                                            <a class="dropdown-item" asp-route-id="@flight.FlightId" asp-action="Details"><i class="fas fa-trash-alt"></i>Details</a>
+                                        </form>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                    <a style='margin-right:16px' asp-action="Edit" asp-route-id="@flight.FlightId" class="dropdown-item"> <i class="fas fa-wrench"></i> Edit </a>
+                                            <a style='margin-right:16px' asp-action="Delete" asp-route-id="@flight.FlightId" class="dropdown-item"> <i class="fas fa-wrench"></i> Delete </a>}
+                                    </div>
+                                }
+
         </div>
         </td>
 </tr>}
 </table>
 
-<footer>
+
     <div class="float-left">
         <div class="pages">
             @for (int i = 1; i <= Model.PagesCount; i++)
@@ -99,4 +103,3 @@ else
             </div>
         </div>
     </nav>
-</footer>

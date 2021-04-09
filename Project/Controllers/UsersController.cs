@@ -121,14 +121,14 @@ namespace FlightManager.Controllers
             return View(model);
         }
 
-        // problem s mnogo context, trqbva da se izpolzva await i async ??
+       
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(string id, UserEditViewModel model)
+        public async Task<IActionResult> Edit(string id, UserEditViewModel model)
         {
             ApplicationUser user  = _context.Users.Where(u => u.Id == id).First();
             string oldRole = _userManager.GetRolesAsync(user).Result.First().ToString();
-            _userManager.RemoveFromRoleAsync(user, oldRole); 
+            await _userManager.RemoveFromRoleAsync(user, oldRole); 
             _context.Entry(user).State = EntityState.Modified;
             _context.SaveChanges();
 
@@ -141,7 +141,7 @@ namespace FlightManager.Controllers
             _context.Users.Update(user);
             _context.SaveChanges();
 
-            _userManager.AddToRoleAsync(user, model.Role);
+           await _userManager.AddToRoleAsync(user, model.Role);
             _context.Entry(user).State = EntityState.Modified;
             _context.SaveChanges();
             return RedirectToAction("Index");

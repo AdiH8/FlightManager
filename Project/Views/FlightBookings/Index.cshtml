@@ -3,6 +3,7 @@
 
 <h1>Flight Reservations</h1>
 <a asp-action="Create">Book a flight</a>
+<main>
 <table class="table">
     <thead>
         <tr>
@@ -50,7 +51,7 @@
     </tbody>
     </table>
 
-<footer>
+
     <div class="float-left">
         <div class="pages">
             @for (int i = 1; i <= Model.PagesCount; i++)
@@ -89,4 +90,4 @@
             </div>
         </div>
     </nav>
-</footer>
+    </main>
