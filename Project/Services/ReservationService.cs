@@ -71,8 +71,9 @@ namespace FlightManager.Services
             dBContext.FlightBookings.Add(reservation);
             dBContext.SaveChanges();
 
-            string msg = $@"Thank you for using our services! <br> You have successfuly made a reservation 
-            for flight {dbFlight.Id} from {dbFlight.LeavingFrom} to {dbFlight.GoingTo} leaving on {dbFlight.Departure}.
+            string msg = $@"Dear Mr./Miss {reservation.Surname}, <br>
+                            Thank you for using our services! <br> You have successfuly made a reservation 
+                            for flight No.{dbFlight.Id} from {dbFlight.LeavingFrom} to {dbFlight.GoingTo} leaving on {dbFlight.Departure}.
                             Now it's only left for you to confirm it. <br />
                             <a href={"https://localhost:44378"}/FlightBookings/Confirm?id={reservation.Id}>Confirm Reservation</a> <br />
                             <a href={"https://localhost:44378"}/FlightBookings/Delete?id={reservation.Id}>Delete</a>";
@@ -106,7 +107,7 @@ namespace FlightManager.Services
 
                 emailSender.SendEmailAsync(reservation.Email, "Canceled Reservation", msg).GetAwaiter().GetResult();
             }
-            Flight dbFlight = dBContext.Flights.Where(f => f.Id.ToString() == reservation.Flight.Id.ToString()).First();
+            Flight dbFlight = dBContext.Flights.Where(f => f.Id.ToString() == reservation.FlightID.ToString()).First();
             if (reservation.TicketType == "Business")
             {
                 dbFlight.BusinessTicketsLeft += 1;

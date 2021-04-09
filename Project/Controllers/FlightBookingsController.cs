@@ -98,7 +98,7 @@ namespace FlightManager.Controllers
 
             reservationService.CreateReservation(resModel);
 
-            return RedirectToAction("Index", "Home");
+            return View("SuccessfulReservation");
         }
 
         public IActionResult Create()
@@ -154,7 +154,7 @@ namespace FlightManager.Controllers
 
             reservationService.CreateReservation(resModel);
 
-            return RedirectToAction("Index", "Home");
+            return View("SuccessfulReservation");
         }
 
         public IActionResult Confirm(int id)

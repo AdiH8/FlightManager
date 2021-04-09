@@ -41,7 +41,7 @@
     <td>@flight.BusinessClassCapacity</td>
     <td class="text-right">
         <div class="btn-group">
-            <a class="dropdown-item" asp-controller="FlightBookings" asp-route-id="@flight.FlightId" asp-action="Book"><i class="fas fa-trash-alt"></i>Book</a>
+            <a class="dropdown-item" asp-controller="FlightBookings" asp-route-id="@flight.FlightId" asp-action="Book" style=" color: #3383d3;"><i class="fas fa-trash-alt"></i><b>Book</b></a>
             @if (User.Identity.IsAuthenticated)
             {
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -88,17 +88,17 @@ else
                 @switch (Model.PageSize)
                 {
                     case 25:
-                        <div class="page"><a asp-action="Index" asp-route-pageSize="10">10</a></div>
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="10"> 10 </a></div>
                         <div class="page"><a class="disabled">25</a></div>
-                        <div class="page"><a asp-action="Index" asp-route-pageSize="50">50</a></div> break;
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="50"> 50 </a></div> break;
                     case 50:
-                        <div class="page"><a asp-action="Index" asp-route-pageSize="10">10</a></div>
-                        <div class="page"><a asp-action="Index" asp-route-pageSize="25">25</a></div>
-                        <div class="page"><a class="disabled">50</a></div> break;
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="10"> 10 </a></div>
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="25"> 25 </a></div>
+                        <div class="page"><a class="disabled"> 50 </a></div> break;
                     default:
-                        <div class="page"><a class="disabled">10</a></div>
-                        <div class="page"><a asp-action="Index" asp-route-pageSize="25">25</a></div>
-                        <div class="page"><a asp-action="Index" asp-route-pageSize="50">50</a></div>break;
+                        <div class="page"><a class="disabled"> 10 </a></div>
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="25"> 25 </a></div>
+                        <div class="page"><a asp-action="Index" asp-route-pageSize="50"> 50 </a></div>break;
                 }
             </div>
         </div>
