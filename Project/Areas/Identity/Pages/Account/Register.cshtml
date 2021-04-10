@@ -62,6 +62,7 @@
             <div class="form-group">
                 @Html.CheckBoxFor(m => m.Input.IsAdmin)
                 <label> Assign as administrator.</label><br>
+                <i style="font-size:small"> If not checked, the new account will be assgined in User role by default.</i>
             </div>
             <button type="submit" value="send" class="btn btn-primary">Register</button>
         </form>
