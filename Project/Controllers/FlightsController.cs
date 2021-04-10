@@ -185,6 +185,7 @@ namespace FlightManager.Controllers
 
             Flight model = new Flight()
             {
+                Id=flight.Id,
                 Arrival = flight.Arrival,
                 BusinessClassCapacity = flight.BusinessClassCapacity,
                 PassengersCapacity = flight.PassengersCapacity,
@@ -203,8 +204,20 @@ namespace FlightManager.Controllers
         [HttpPost]
         public IActionResult Edit(Flight model)
         {
-            Flight flight = model;
-            
+            Flight flight = new Flight()
+            {
+                Id = model.Id,
+                Arrival = model.Arrival,
+                BusinessClassCapacity = model.BusinessClassCapacity,
+                PilotName = model.PilotName,
+                LeavingFrom = model.LeavingFrom,
+                Departure = model.Departure,
+                GoingTo = model.GoingTo,
+                PassengersCapacity = model.PassengersCapacity,
+                PlaneId = model.PlaneId,
+                AirplaneType = model.AirplaneType
+            };
+
             flightService.UpdateFlight(model);
 
             return RedirectToAction("Details");
