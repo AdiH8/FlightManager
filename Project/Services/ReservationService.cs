@@ -58,6 +58,7 @@ namespace FlightManager.Services
 
             };
 
+            // changes the count of the left tickets for the flight
             Flight dbFlight = dBContext.Flights.Where(f => f.Id.ToString() == model.FlightId.ToString()).First();
             if (model.TicketType == "Business")
             {
@@ -71,6 +72,9 @@ namespace FlightManager.Services
             dBContext.FlightBookings.Add(reservation);
             dBContext.SaveChanges();
 
+            // here is the message that is automatically send to the given email address when done with making the reservation
+            // note that the links below contain the address of a local host, currently on the computer that the program is running on
+            // in order this to works on another device, the address have to be changed with the numbers of the different local host
             string msg = $@"Dear Mr./Miss {reservation.Surname}, <br>
                             Thank you for using our services! <br> You have successfuly made a reservation 
                             for flight No.{dbFlight.Id} from {dbFlight.LeavingFrom} to {dbFlight.GoingTo} leaving on {dbFlight.Departure}.
@@ -78,6 +82,7 @@ namespace FlightManager.Services
                             <a href={"https://localhost:44378"}/FlightBookings/Confirm?id={reservation.Id}>Confirm Reservation</a> <br />
                             <a href={"https://localhost:44378"}/FlightBookings/Delete?id={reservation.Id}>Delete</a>";
 
+            // sends the message to the given email address
             emailSender.SendEmailAsync(reservation.Email, "Reservation Confirmation", msg).GetAwaiter().GetResult();
 
             return reservation;
@@ -96,7 +101,10 @@ namespace FlightManager.Services
         public FlightBooking DeleteReservation(int id)
         {
             FlightBooking reservation = dBContext.FlightBookings.Where(r => r.Id == id).First();
-            
+
+            // you can only delete not confirmed reservations
+            // however when deleting a flight that has confirmed reservations for it,
+            // an email is send to every passenger about what has occured and why their reservation has been deleted
             if (reservation.IsConfirmed) {
                 string msg = $@"We are sorry to inform you that there have been some issues 
                  with flight No. {reservation.Flight.Id} - {reservation.Flight.LeavingFrom} 
@@ -107,7 +115,10 @@ namespace FlightManager.Services
 
                 emailSender.SendEmailAsync(reservation.Email, "Canceled Reservation", msg).GetAwaiter().GetResult();
             }
+
             Flight dbFlight = dBContext.Flights.Where(f => f.Id.ToString() == reservation.FlightID.ToString()).First();
+           
+            // increases the count of the tickets left for the particular flight and class
             if (reservation.TicketType == "Business")
             {
                 dbFlight.BusinessTicketsLeft += 1;
@@ -126,8 +137,17 @@ namespace FlightManager.Services
 
         public FlightBooking GetReservationById(int id)
         {
-            FlightBooking reservation = dBContext.FlightBookings.Where(r => r.Id == id).First();
-            reservation.Flight = dBContext.Flights.Where(f => f.Id == reservation.FlightID).First();
+            FlightBooking reservation = new FlightBooking();
+            try
+            {
+                reservation = dBContext.FlightBookings.Where(r => r.Id == id).First();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+           
             return reservation;
         }
     }

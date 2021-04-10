@@ -28,27 +28,28 @@ namespace FlightManager.Controllers
          
         public async Task<IActionResult> Index()
         {
+
+            // creates the default roles and adds them to the database
             IdentityRole userRole = new IdentityRole() { Id = Guid.NewGuid().ToString(), Name = "User" };
-
             IdentityRole adminRole = new IdentityRole() { Id = Guid.NewGuid().ToString(), Name = "Admin" };
-
             await this.roleManager.CreateAsync(userRole);
             await this.roleManager.CreateAsync(adminRole);
 
-            ApplicationUser admin = new ApplicationUser()
-            {
-                FirstName = "Admin",
-                Surname = "Admin",
-                SSN = "0987654321",
-                Address = "Bulgaria",
-                PhoneNumber = "0987654321",
-                UserName = "admin",
-                EmailConfirmed = true,
-                Email = "admin@email.com"
-            };
-
+            // creates and adds new user to the database if there aren't any already existing
             if (_userManager.Users.ToList().Count==0)
             {
+                ApplicationUser admin = new ApplicationUser()
+                {
+                    FirstName = "Admin",
+                    Surname = "Admin",
+                    SSN = "0987654321",
+                    Address = "Bulgaria",
+                    PhoneNumber = "0987654321",
+                    UserName = "admin",
+                    EmailConfirmed = true,
+                    Email = "admin@email.com"
+                };
+
                 await _userManager.CreateAsync(admin, "Admin.1");
                 await _userManager.AddToRoleAsync(admin, "Admin");
                 

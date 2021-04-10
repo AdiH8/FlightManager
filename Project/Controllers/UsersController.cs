@@ -126,12 +126,17 @@ namespace FlightManager.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(string id, UserEditViewModel model)
         {
+            //gets the user we are going to edit from the datase
             ApplicationUser user  = _context.Users.Where(u => u.Id == id).First();
+            
+            // finds the role of the user before he was edited
             string oldRole = _userManager.GetRolesAsync(user).Result.First().ToString();
+            // removes the user from the old role
             await _userManager.RemoveFromRoleAsync(user, oldRole); 
             _context.Entry(user).State = EntityState.Modified;
             _context.SaveChanges();
 
+            // gets the edited information for the user
             user.FirstName = model.FirstName;
             user.Surname = model.Surname;
             user.Address = model.Address;
@@ -141,9 +146,11 @@ namespace FlightManager.Controllers
             _context.Users.Update(user);
             _context.SaveChanges();
 
+            // adds the user to the new role
            await _userManager.AddToRoleAsync(user, model.Role);
             _context.Entry(user).State = EntityState.Modified;
             _context.SaveChanges();
+
             return RedirectToAction("Index");
         }
 

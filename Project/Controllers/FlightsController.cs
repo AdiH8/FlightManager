@@ -104,6 +104,7 @@ namespace FlightManager.Controllers
             Flight flightToDelete = flightService.GetFlightById(id);
             List<FlightBooking> Reservations = reservationService.GetAllReservationsForFlight(flightToDelete);
 
+            // in order to delete a flight, we have to also delete all the reservations coming with it
             if (Reservations.Count!=0)
             {
                 foreach (var reservation in Reservations)
@@ -176,7 +177,6 @@ namespace FlightManager.Controllers
             return RedirectToAction("Index");
         }
 
-      
 
         [Authorize]
         public IActionResult Edit(int id)

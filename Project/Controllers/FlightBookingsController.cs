@@ -19,12 +19,12 @@ namespace FlightManager.Controllers
             this.flightService = flightService;
         }
 
+        // gets all the reservations from the database
         public IActionResult Index(string filter, int? page, int pageSize = 10)
         {
             int pageNumber = (page ?? 1);
             ReservationsIndexViewModel model = new ReservationsIndexViewModel()
             {
-               
                 Reservations = reservationService.GetAllReservations().Select(r => new ReservationIndexViewModel()
                 {
                     ReservationId=r.Id,
@@ -44,6 +44,7 @@ namespace FlightManager.Controllers
                 PageSize = pageSize
             };
 
+            // orders and re-orders the reservations if chosen to be sorted ascending or descending by email
             if (filter == "email")
             {
                 model.Reservations = model.Reservations.OrderBy(r => r.Email).ToList();
@@ -53,10 +54,14 @@ namespace FlightManager.Controllers
                 model.Reservations = model.Reservations.OrderByDescending(r => r.Email).ToList();
             }
 
+            // here is realized changing the pages
             model.Reservations = model.Reservations.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
             return View(model);
         }
+
+        // this method is called from the Index view in the Flight folder
+        // when  an exact flight is wanted to be booked
         public IActionResult Book(int id)
         {
             ViewBag.Message = id;
@@ -67,16 +72,14 @@ namespace FlightManager.Controllers
         public IActionResult Book(ReservationCreateViewModel model)
         {
             Flight flight = flightService.GetFlightById(model.FlightId);
+
+            // checks if there are enough tickets left
             if (model.TicketType == "Business" && flight.BusinessTicketsLeft == 0)
             {
-                // model.ErrorMessage = "Not enough Business class tickets!";
-
                 return View("FullPlaneView");
             }
             else if (model.TicketType == "Regular" && flight.TicketsLeft == 0)
             {
-
-                // model.ErrorMessage = "Not enough Regular class tickets!";
                 return View("FullPlaneView");
             }
 
@@ -123,16 +126,14 @@ namespace FlightManager.Controllers
         public IActionResult Create(ReservationCreateViewModel model)
         {
             Flight flight = flightService.GetFlightById(model.FlightId);
+
+            // checks if there are enough tickets left
             if (model.TicketType == "Business" && flight.BusinessTicketsLeft ==0)
             {
-               // model.ErrorMessage = "Not enough Business class tickets!";
-                
                 return View("FullPlaneView");
             }
             else if (model.TicketType == "Regular" && flight.TicketsLeft ==0)
             {
-               
-               // model.ErrorMessage = "Not enough Regular class tickets!";
                 return View("FullPlaneView");
             }
 
@@ -161,7 +162,7 @@ namespace FlightManager.Controllers
         {
             if (reservationService.GetReservationById(id) == null)
             {
-                return RedirectToAction("NotFound");
+                return View("NotFound");
             }
 
             reservationService.ConfirmReservation(id);
@@ -202,15 +203,18 @@ namespace FlightManager.Controllers
             }
 
             var reservation = reservationService.GetReservationById(id);
+            if (reservation == null)
+            { 
+                return View("NotFound");
+            }
 
+            // checks if the reservation is confirmed
             if (reservation.IsConfirmed)
             {
                 return View("CannotDelete");
             }
-            if (reservation == null)
-            {
-                return NotFound();
-            }
+
+           
 
             return View(reservation);
         }
