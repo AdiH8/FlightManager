@@ -220,7 +220,7 @@ namespace FlightManager.Controllers
 
             flightService.UpdateFlight(model);
 
-            return RedirectToAction("Details");
+            return RedirectToAction("Index", "Home");
         }
 
     }

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace FlightManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,7 +24,7 @@ namespace FlightManager.Controllers
         }
 
         // GET: Users
-        [Authorize]
+        [Authorize(Roles ="Admin")]
         public IActionResult Index(int? page, string searchString, string filter, int pageSize = 10)
         {
             int pageNumber = (page ?? 1);

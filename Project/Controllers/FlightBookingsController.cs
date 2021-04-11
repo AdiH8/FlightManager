@@ -168,11 +168,12 @@ namespace FlightManager.Controllers
             reservationService.ConfirmReservation(id);
 
             FlightBooking reservation = reservationService.GetReservationById(id);
+            Flight flight = flightService.GetFlightById(reservation.FlightID);
 
             ReservationConfirmViewModel model = new ReservationConfirmViewModel()
             {
-                DepartureCity = reservation.Flight.LeavingFrom,
-                DestinationCity = reservation.Flight.GoingTo,
+                DepartureCity = flight.LeavingFrom,
+                DestinationCity = flight.GoingTo,
                 Name = reservation.FirstName + " " + reservation.Surname
             };
 
